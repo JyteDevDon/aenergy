@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aidios Bridgeway Energy - Coming Soon</title>
+    <style>
+        /* --- General Reset & Layout --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Prevents scrolling */
+            color: white;
+        }
+
+        /* --- Background Slider Container --- */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: #000; /* Fallback color */
+        }
+
+        /* Individual Background Images */
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out; /* Smooth cross-fade */
+        }
+
+        .bg-slide.active {
+            opacity: 1;
+        }
+
+        /* Dark overlay to make text readable against busy images */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* 40% dark tint */
+            z-index: 0;
+        }
+
+        /* --- Main Content Layout --- */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes Logo top, Timer bottom */
+            align-items: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- Logo Styling --- */
+        .logo-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 400px;
+            width: 80%; /* Responsive width */
+            height: auto;
+            /* Faded and Blended Effect */
+            opacity: 0.9; 
+            /* Adds a slight brightness to pop against the dark overlay */
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); 
+        }
+
+        /* --- Countdown Timer Styling --- */
+        .timer-container {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .timer-label {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.15); /* Glassmorphism effect */
+            backdrop-filter: blur(5px);
+            padding: 15px 20px;
+            border-radius: 10px;
+            min-width: 70px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .countdown {
+                gap: 10px;
+            }
+            .time-box {
+                min-width: 50px;
+                padding: 10px;
+            }
+            .number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-container">
+        <div class="overlay"></div>
+        <div class="bg-slide active" style="background-image: url('Coming_soon_priority_east.jpeg');"></div>
+        <div class="bg-slide" style="background-image: url('Coming_soon_priority_south.jpeg');"></div>
+        <div class="bg-slide" style="background-image: url('Coming_soon_priority_west.jpeg');"></div>
+        <div class="bg-slide" style="background-image: url('Coming_soon_priority_north.jpeg');"></div>
+    </div>
+
+    <div class="content-wrapper">
+        
+        <div class="logo-container">
+            <img src="AIDIOS BRIDGEWAY ENERGY  LOGO DEC2025.png" alt="Aidios Bridgeway Energy" class="logo">
+        </div>
+
+        <div class="timer-container">
+            <div class="timer-label">Official Launch In</div>
+            <div class="countdown" id="countdown">
+                <div class="time-box">
+                    <span class="number" id="days">00</span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="hours">00</span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="minutes">00</span>
+                    <span class="label">Mins</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="seconds">00</span>
+                    <span class="label">Secs</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. Background Image Slider Logic ---
+        const slides = document.querySelectorAll('.bg-slide');
+        let currentSlide = 0;
+        const slideInterval = 15000; // 15 seconds in milliseconds
+
+        function nextSlide() {
+            // Remove active class from current
+            slides[currentSlide].classList.remove('active');
+            // Calculate next index (loop back to 0 if at end)
+            currentSlide = (currentSlide + 1) % slides.length;
+            // Add active class to new slide
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Run the transition every 15 seconds
+        setInterval(nextSlide, slideInterval);
+
+
+        // --- 2. Countdown Timer Logic ---
+        // Target Date: December 20, 2025 at 00:00:00
+        const targetDate = new Date("December 20, 2025 00:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                // If date is passed
+                document.getElementById("countdown").innerHTML = "<div class='time-box'>LAUNCHED</div>";
+                return;
+            }
+
+            // Calculations for days, hours, minutes, and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update DOM
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+
+        // Update immediately, then every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
