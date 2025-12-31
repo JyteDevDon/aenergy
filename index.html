@@ -44,15 +44,14 @@
             opacity: 1;
         }
 
-        /* Dark overlay - slightly reduced opacity since there is no logo now, 
-           letting the background text pop more */
+        /* Dark overlay */
         .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.2); /* Reduced to 20% tint */
+            background: rgba(0, 0, 0, 0.2); 
             z-index: 0;
         }
 
@@ -63,7 +62,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            /* Pushes content to the bottom */
             justify-content: flex-end; 
             align-items: center;
             padding: 40px 20px;
@@ -72,7 +70,6 @@
 
         /* --- Countdown Timer Styling --- */
         .timer-container {
-            /* Large bottom margin to lift it up slightly from the very edge */
             margin-bottom: 80px; 
             text-align: center;
         }
@@ -188,15 +185,36 @@
 
 
         // --- 2. Countdown Timer Logic ---
-        // Target: Midnight, 31th December 2025
+        // Target: Midnight, 31st December 2025
         const targetDate = new Date("December 31, 2025 23:59:59").getTime();
+        
+        // Declare the interval variable so we can clear it later
+        let timerInterval;
 
         function updateCountdown() {
             const now = new Date().getTime();
             const distance = targetDate - now;
 
             if (distance < 0) {
-                document.getElementById("countdown").innerHTML = "<div class='time-box' style='width:100%'>LAUNCHED</div>";
+                // STOP the timer loop so this block runs only once
+                clearInterval(timerInterval);
+
+                // Update text above button
+                document.querySelector('.timer-label').innerText = "Now Launched";
+
+                // Change button to link to the new URL
+                document.getElementById("countdown").innerHTML = 
+                    "<a href='https://preorders.aidiosbridgeway.com/' style='text-decoration: none; color: white; width: 100%; display: flex; justify-content: center;'>" +
+                        "<div class='time-box' style='width:100%; cursor: pointer; text-align: center;'>" + 
+                            "Go to Preorders Portal" + 
+                        "</div>" +
+                    "</a>";
+
+                // Automatic redirect after 10 seconds
+                setTimeout(function() {
+                    window.location.href = "https://preorders.aidiosbridgeway.com/";
+                }, 10000);
+                
                 return;
             }
 
@@ -211,8 +229,11 @@
             document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
         }
 
+        // Start the timer loop
+        timerInterval = setInterval(updateCountdown, 1000);
+
+        // Run once immediately to prevent 1-second delay on load
         updateCountdown();
-        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
